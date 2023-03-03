@@ -31,6 +31,7 @@ public class PurchaseOrderController {
 
         Cart cart;
 
+        //Check for existing session Cart
         if(session.getAttribute("sessioncart")==null){
             cart = new Cart();
         } else{
@@ -39,7 +40,7 @@ public class PurchaseOrderController {
         
         session.setAttribute("sessioncart", cart);
         model.addAttribute("cart", cart);
-        model.addAttribute("order", new Order());
+        
         return "view1";
     }
 
@@ -47,11 +48,12 @@ public class PurchaseOrderController {
     public String addItem(@Valid Cart cart, BindingResult binding, Model model, HttpSession session) {
         Cart sessioncart = (Cart) session.getAttribute("sessioncart");
 
+        //update previous items to validated cart
         cart.setItemList(sessioncart.getItemList());
 
+        model.addAttribute("cart", cart);  
+
         if (binding.hasErrors()){
-            model.addAttribute("cart", cart);
-            model.addAttribute("order", new Order());
             return "view1";
         }
 
@@ -60,8 +62,6 @@ public class PurchaseOrderController {
         if (!checkEqual(cart.getCurrentChoice(), validItems)) {
             ObjectError err = new ObjectError("globalError", "We do not stock %s".formatted(cart.getCurrentChoice()));
             binding.addError(err);
-            model.addAttribute("cart", cart);
-            model.addAttribute("order", new Order());
             return "view1";
         }
 
@@ -69,8 +69,7 @@ public class PurchaseOrderController {
 
         session.setAttribute("sessioncart", sessioncart);
         model.addAttribute("cart", sessioncart);
-        model.addAttribute("order", new Order());
-
+        
         return "view1";
     }
 
@@ -87,23 +86,20 @@ public class PurchaseOrderController {
             return "view1";
         }
 
-        //order = new Order();
-        //order.setCart(sessioncart);
-        //session.setAttribute("sessionOrder", order);
         model.addAttribute("order", new Order());
 
         return "view2";
     }
 
     @GetMapping("/checkout")
-    public String getView3(@Valid Order order, BindingResult binding, Model model, HttpSession session) throws Exception{
+    public String getView3(@Valid Order order, BindingResult binding, Model model, HttpSession session){
         
         if (binding.hasErrors()){
             return "view2";
         }
 
+        //Create list to get quotation
         Cart cart = (Cart) session.getAttribute("sessioncart");
-        
         List<String> itemlist = new LinkedList<>();
         for(Map.Entry<String,Integer> entry: cart.getItemList().entrySet()){
             itemlist.add(entry.getKey());
@@ -121,7 +117,8 @@ public class PurchaseOrderController {
             return "view2";
         }
 
-        order.setTotal(calculateCost(quotation,cart));
+        //Calculate and set cost
+        order.setTotalString("%.2f".formatted(calculateCost(quotation,cart)));
         session.invalidate();
 
         return "view3";

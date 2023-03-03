@@ -15,6 +15,7 @@ public class Order {
     private Cart cart;
 
     private Float total;
+    private String totalString;
 
     private String invoiceId;
 
@@ -47,6 +48,12 @@ public class Order {
     }
     public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
+    }
+    public String getTotalString() {
+        return totalString;
+    }
+    public void setTotalString(String totalString) {
+        this.totalString = totalString;
     }
 
     

@@ -89,7 +89,8 @@
 		</tbody>
 	</table>
 
-	<table>
+	
+	<table th:if="${order!=null}">
 		<td data-th-object="${order}">
 			<div data-th-if="${#fields.hasErrors('global')}">
 				<p data-th-each="err: ${#fields.errors('global')}" data-th-text="${err}">
