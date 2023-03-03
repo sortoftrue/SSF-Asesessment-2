@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Shipping Address</h1>
+    <form action="/checkout" method="/GET" th:object="${order}">
+        <table>
+            <tr>
+                Name:
+                <input type="text" data-th-field="*{name}" size="4" placeholder="At least 2 Char">
+
+                <span class="error" data-th-if="${#fields.hasErrors('name')}" data-th-errors="*{name}"></span>
+            </tr>
+            <tr>
+                Address:
+                <input type="text" data-th-field="*{address}" size="4" placeholder="Required">
+
+                <span class="error" data-th-if="${#fields.hasErrors('address')}" data-th-errors="*{address}"></span>
+            </tr>
+
+            <tr>
+                <td>
+                    <button type="submit">Checkout</button></form>
+                    <form action="/" method="GET">
+                        <button type="submit">Back</button>
+                    </form>
+                </td>
+                    
+
+            </tr>
+        </table>
+
+
+    </form>
+</body>
+
+</html>
